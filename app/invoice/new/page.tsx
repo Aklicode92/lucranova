@@ -40,17 +40,18 @@ export default function CreateInvoicePage() {
 
   useEffect(() => {
     const subtotal = lines.reduce((sum, line) => {
-      const price = parseFloat((line.price ?? '0').toString())
-      const quantity = parseFloat((line.quantity ?? '0').toString())
-      const discount = parseFloat((line.discount ?? '0').toString())
+      const price = parseFloat(`${line.price ?? '0'}`)
+      const quantity = parseFloat(`${line.quantity ?? '0'}`)
+      const discount = parseFloat(`${line.discount ?? '0'}`)
       return sum + (price * quantity * (1 - discount / 100))
     }, 0)
   
-    const vatRate = parseFloat((lines[0]?.moms ?? '0').toString())
+    const vatRate = parseFloat(`${lines[0]?.moms ?? '0'}`)
     const total = subtotal + (subtotal * vatRate / 100)
     setSubtotal(subtotal)
     setTotalWithVAT(total)
   }, [lines])
+  
   
   
   
