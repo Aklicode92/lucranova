@@ -4,13 +4,24 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 
+type InvoiceLine = {
+  description: string
+  quantity: string
+  unit: string
+  price: string
+  discount: string
+  moms: string
+  type: string
+}
+
+
 export default function CreateInvoicePage() {
   const router = useRouter()
   const [receiverName, setReceiverName] = useState('')
   const [receiverOrgNr, setReceiverOrgNr] = useState('')
   const [receiverAddress, setReceiverAddress] = useState('')
   const [receiverZipCity, setReceiverZipCity] = useState('')
-  const [lines, setLines] = useState<Array<{ [key: string]: string }>>([{
+  const [lines, setLines] = useState<InvoiceLine[]>([{
     description: '',
     quantity: '1',
     unit: '',
@@ -19,6 +30,7 @@ export default function CreateInvoicePage() {
     moms: '25',
     type: 'tjanst'
   }])
+  
   
 
   
@@ -102,11 +114,18 @@ export default function CreateInvoicePage() {
     setLines(newLines)
   }
 
-  const handleLineChange = (index: number, field: string, value: string) => {
+  const handleLineChange = (
+    index: number,
+    field: keyof InvoiceLine,
+    value: string
+  ) => {
     const newLines = [...lines]
-    newLines[index][field] = value
+    newLines[index][field] = value    
     setLines(newLines)
   }
+  
+  
+  
 
   const handleCustomerChange = (customerId: string) => {
     setSelectedCustomerId(customerId)
