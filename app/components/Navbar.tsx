@@ -1,36 +1,35 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useUser } from '@/lib/useUser'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function Navbar() {
-  const [user, setUser] = useState<any>(null)
+  const { user } = useUser()
+  const router = useRouter()
 
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-    }
-    getUser()
-  }, [])
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   return (
-    <nav className="bg-white shadow px-4 py-3 flex justify-between items-center">
-      <Link href="/" className="text-xl font-bold text-[#1A264F]">enkelfaktura</Link>
-      <div className="space-x-6 text-sm text-[#1A264F] font-medium">
-        {user ? (
+    <nav className="bg-white shadow px-6 py-4 flex justify-between">
+      <Link href="/" className="font-bold text-xl text-[#1A264F]">EnkelFaktura</Link>
+      <div className="flex space-x-6 items-center">
+        {!user ? (
           <>
-            <Link href="/invoice">Mina fakturor</Link>
-            <Link href="/invoice/new">Skapa faktura</Link>
-            <Link href="/customers">Kundlista</Link>
-            <Link href="/profile">Min profil</Link>
+            <Link href="/signup" className="hover:underline">Skapa konto</Link>
+            <Link href="/login" className="hover:underline">Logga in</Link>
           </>
         ) : (
           <>
-            <Link href="/about">Om oss</Link>
-            <Link href="/register">Skapa konto</Link>
-            <Link href="/login">Logga in</Link>
+            <Link href="/invoice" className="hover:underline">Mina fakturor</Link>
+            <Link href="/invoice/new" className="hover:underline">Skapa faktura</Link>
+            <Link href="/customer" className="hover:underline">Kundlista</Link>
+            <Link href="/profile" className="hover:underline">Min profil</Link>
+            <button onClick={handleLogout} className="hover:underline text-red-500">Logga ut</button>
           </>
         )}
       </div>
