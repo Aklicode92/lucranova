@@ -14,9 +14,11 @@ export default function Navbar() {
     router.push('/login')
   }
 
+  const logoLink = user ? '/dashboard' : '/'
+
   return (
     <nav className="bg-white shadow px-6 py-4 flex justify-between">
-      <Link href="/" className="font-bold text-xl text-[#1A264F]">EnkelFaktura</Link>
+      <Link href={logoLink} className="font-bold text-xl text-[#1A264F]">EnkelFaktura</Link>
       <div className="flex space-x-6 items-center">
         {!user ? (
           <>
@@ -25,6 +27,7 @@ export default function Navbar() {
           </>
         ) : (
           <>
+            <Link href="/dashboard" className="hover:underline">Översikt</Link>
             <Link href="/invoice" className="hover:underline">Mina fakturor</Link>
             <Link href="/invoice/new" className="hover:underline">Skapa faktura</Link>
             <Link href="/customer" className="hover:underline">Kundlista</Link>
