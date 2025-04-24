@@ -1,53 +1,57 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '../../lib/supabaseClient'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabaseClient'
 
 export default function SignupPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
 
-  const handleSignup = async () => {
-    const { error } = await supabase.auth.signUp({
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+
+    // 1. Skapa konto
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     })
 
-    if (error) {
-      setError(error.message)
-      setMessage('')
-    } else {
-      setError('')
-      setMessage('Registrering lyckades! Kolla din e-post för att bekräfta kontot.')
+    if (signUpError || !data.user) {
+      setError('Kunde inte skapa konto.')
+      return
     }
+
+    // 2. Skapa profil
+    const { error: profileError } = await supabase.from('user_profiles').insert([
+      {
+        user_id: data.user.id,
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+      },
+    ])
+
+    if (profileError) {
+      setError('Database error saving new user')
+      return
+    }
+
+    // 3. Vidare till översikten
+    router.push('/dashboard')
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Skapa konto</h1>
-      <input
-        type="email"
-        placeholder="E-post"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 mb-2"
-      />
-      <input
-        type="password"
-        placeholder="Lösenord"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 mb-2"
-      />
-      <button onClick={handleSignup} className="bg-blue-600 text-white px-4 py-2 rounded">
-        Skapa konto
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      {message && <p className="text-green-600 mt-2">{message}</p>}
-    </div>
-  )
-}
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      <h1 className="text-3xl font-bold mb-6">Skapa konto</h1>
+      <form onSubmit={handleSignup} className="space-y-4 w-full max-w-sm">
+        <input
+          type="text"
+          placeholder="Förnamn"
+          value={firstName}
+          onChange={(
