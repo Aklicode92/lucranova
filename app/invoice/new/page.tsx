@@ -10,15 +10,7 @@ export default function CreateInvoicePage() {
   const [receiverOrgNr, setReceiverOrgNr] = useState('')
   const [receiverAddress, setReceiverAddress] = useState('')
   const [receiverZipCity, setReceiverZipCity] = useState('')
-  const [lines, setLines] = useState<Array<{
-    description: string
-    quantity: string
-    unit: string
-    price: string
-    discount: string
-    moms: string
-    type: string
-  }>>([{
+  const [lines, setLines] = useState<Array<{ [key: string]: string }>>([{
     description: '',
     quantity: '1',
     unit: '',
@@ -27,6 +19,8 @@ export default function CreateInvoicePage() {
     moms: '25',
     type: 'tjanst'
   }])
+  
+
   
   const [freeText, setFreeText] = useState('')
   const [error, setError] = useState('')
