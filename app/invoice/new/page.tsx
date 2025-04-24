@@ -58,7 +58,7 @@ export default function CreateInvoicePage() {
   useEffect(() => {
     const subtotal = lines.reduce((sum, line) => {
       const price = parseFloat(String(line.price ?? '0'))
-      const quantity = parseFloat(String(line.quantity ?? '0'))
+      const quantity = parseFloat((line.quantity ?? '0').toString())
       const discount = parseFloat(String(line.discount ?? '0'))
       return sum + (price * quantity * (1 - discount / 100))
     }, 0)
