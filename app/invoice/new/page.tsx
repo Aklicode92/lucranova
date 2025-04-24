@@ -10,7 +10,24 @@ export default function CreateInvoicePage() {
   const [receiverOrgNr, setReceiverOrgNr] = useState('')
   const [receiverAddress, setReceiverAddress] = useState('')
   const [receiverZipCity, setReceiverZipCity] = useState('')
-  const [lines, setLines] = useState([{ description: '', quantity: 1, unit: '', price: '', discount: '', moms: '25', type: 'tjanst' }])
+  const [lines, setLines] = useState<Array<{
+    description: string
+    quantity: string
+    unit: string
+    price: string
+    discount: string
+    moms: string
+    type: string
+  }>>([{
+    description: '',
+    quantity: '1',
+    unit: '',
+    price: '',
+    discount: '',
+    moms: '25',
+    type: 'tjanst'
+  }])
+  
   const [freeText, setFreeText] = useState('')
   const [error, setError] = useState('')
   const [customers, setCustomers] = useState<any[]>([])
@@ -73,8 +90,17 @@ export default function CreateInvoicePage() {
     
 
   const handleAddLine = () => {
-    setLines([...lines, { description: '', quantity: 1, unit: '', price: '', discount: '', moms: '25', type: 'tjanst' }])
+    setLines([...lines, {
+      description: '',
+      quantity: '1',
+      unit: '',
+      price: '',
+      discount: '',
+      moms: '25',
+      type: 'tjanst'
+    }])
   }
+  
 
   const handleRemoveLine = (index: number) => {
     const newLines = lines.filter((_, i) => i !== index)
