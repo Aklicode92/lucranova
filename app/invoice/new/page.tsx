@@ -114,15 +114,16 @@ export default function CreateInvoicePage() {
     setLines(newLines)
   }
 
-  const handleLineChange = (
+  const handleLineChange = <K extends keyof InvoiceLine>(
     index: number,
-    field: keyof InvoiceLine,
-    value: string
+    field: K,
+    value: InvoiceLine[K]
   ) => {
     const newLines = [...lines]
-    newLines[index][field] = value    
+    newLines[index][field] = value
     setLines(newLines)
   }
+  
   
   
   
