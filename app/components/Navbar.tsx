@@ -1,45 +1,39 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
 export default function Navbar() {
-  const router = useRouter()
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      setLoggedIn(!!data.session)
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
     }
-    checkSession()
+    getUser()
   }, [])
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
-  }
-
   return (
-    <nav className="bg-[#1A264F] text-white px-6 py-3 flex justify-between items-center shadow">
-      <div className="flex gap-6 text-sm font-medium">
-        <Link href="/dashboard" className="hover:underline">Översikt</Link>
-        <Link href="/invoice" className="hover:underline">Mina fakturor</Link>
-        <Link href="/invoice/new" className="hover:underline">Skapa faktura</Link>
-        <Link href="/customer" className="hover:underline">Kundregister</Link>
-        <Link href="/customer/new" className="hover:underline">Ny kund</Link>
-        <Link href="/profile" className="hover:underline">Min profil</Link>
+    <nav className="bg-white shadow px-4 py-3 flex justify-between items-center">
+      <Link href="/" className="text-xl font-bold text-[#1A264F]">enkelfaktura</Link>
+      <div className="space-x-6 text-sm text-[#1A264F] font-medium">
+        {user ? (
+          <>
+            <Link href="/invoice">Mina fakturor</Link>
+            <Link href="/invoice/new">Skapa faktura</Link>
+            <Link href="/customers">Kundlista</Link>
+            <Link href="/profile">Min profil</Link>
+          </>
+        ) : (
+          <>
+            <Link href="/about">Om oss</Link>
+            <Link href="/register">Skapa konto</Link>
+            <Link href="/login">Logga in</Link>
+          </>
+        )}
       </div>
-      {loggedIn && (
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 hover:bg-red-500 text-white px-4 py-1 rounded-md text-sm"
-        >
-          Logga ut
-        </button>
-      )}
     </nav>
   )
 }
