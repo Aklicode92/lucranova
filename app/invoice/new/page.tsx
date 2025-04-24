@@ -127,6 +127,7 @@ export default function CreateInvoicePage() {
   
   
   
+  
 
   const handleCustomerChange = (customerId: string) => {
     setSelectedCustomerId(customerId)
