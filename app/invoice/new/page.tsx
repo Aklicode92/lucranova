@@ -40,16 +40,17 @@ export default function CreateInvoicePage() {
 
   useEffect(() => {
     const subtotal = lines.reduce((sum, line) => {
-      const price = parseFloat(line.price || '0')
-      const quantity = parseFloat(line.quantity || '0')
-      const discount = parseFloat(line.discount || '0')
+      const price = parseFloat(String(line.price) || '0')
+      const quantity = parseFloat(String(line.quantity) || '0')
+      const discount = parseFloat(String(line.discount) || '0')
       return sum + (price * quantity * (1 - discount / 100))
     }, 0)
-    const vatRate = parseFloat(lines[0]?.moms || '0')
+    const vatRate = parseFloat(String(lines[0]?.moms || '0'))
     const total = subtotal + (subtotal * vatRate / 100)
     setSubtotal(subtotal)
     setTotalWithVAT(total)
   }, [lines])
+  
 
   useEffect(() => {
     if (!invoiceDate || isNaN(parseInt(paymentTerms))) {
@@ -203,7 +204,7 @@ export default function CreateInvoicePage() {
                   <input type="text" placeholder="Enhet" value={line.unit} onChange={(e) => handleLineChange(index, 'unit', e.target.value)} className="border border-gray-300 px-3 py-2 rounded w-full" required />
                   <input type="number" placeholder="Pris" value={line.price} onChange={(e) => handleLineChange(index, 'price', e.target.value)} className="border border-gray-300 px-3 py-2 rounded w-full" required />
                   <input type="number" placeholder="Rabatt %" value={line.discount} onChange={(e) => handleLineChange(index, 'discount', e.target.value)} className="border border-gray-300 px-3 py-2 rounded w-full" />
-                  <select value={line.moms} onChange={(e) => handleLineChange(index, 'moms', e.target.value)} className="border border-gray-300 px-3 py-2 rounded w-full">
+                  <select value={line.type} onChange={(e) => handleLineChange(index, 'type', e.target.value)} className="border border-gray-300 px-3 py-2 rounded w-full">
                     <option value="0">0%</option>
                     <option value="6">6%</option>
                     <option value="12">12%</option>
