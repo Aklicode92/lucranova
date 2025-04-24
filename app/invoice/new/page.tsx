@@ -52,6 +52,8 @@ export default function CreateInvoicePage() {
     setTotalWithVAT(total)
   }, [lines])
   
+  
+  
 
   useEffect(() => {
     if (!invoiceDate || isNaN(parseInt(paymentTerms))) {
